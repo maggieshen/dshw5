@@ -13,24 +13,26 @@ public class TopSort {
 	public void sort(String fileName)
 	{
 		try { 
-			String in[] = null;
+			String line = null;
 			FileReader f = new FileReader(fileName); 
 			BufferedReader br = new BufferedReader(f);
+			hm = new HashMap<>();
 			
 			// Store items in hashmap
-			while((in = br.readLine().split("\\s+")) != null)
+			while((line = br.readLine()) != null)
 			{
+				String[] in = line.split("\\s+");
 				String id = in[0];
 				TopVert tv = new TopVert(id);
 				
-				// For all the other prerequisites
+				// For all the prerequisites
 				for(int i = 1; i < in.length; i++)
 				{
 					if(!hm.containsKey(in[i]))
 						hm.put(in[i], new TopVert(id));
 
-					tv.addVertex(hm.get(in[i]));
-					hm.get(in[i]).incrementIndegree();
+					hm.get(in[i]).addVertex(tv);
+					tv.incrementIndegree();
 				}
 				hm.put(id, tv);
 			}
@@ -39,7 +41,6 @@ public class TopSort {
 			topsort();
 			
 			br.close();
-			
 		} catch(FileNotFoundException e) {
 			System.err.println("File not found");
 		} catch(IOException e) { 
@@ -61,7 +62,16 @@ public class TopSort {
 		
 		while(!q.isEmpty())
 		{
+			TopVert tv = q.remove();
+			tv.setTopNum(++counter);
+			System.out.println(tv.getTopNum()+ ". "+ tv);
 			
+			for(TopVert adj : tv.getAdjacencyList())
+			{
+				adj.decrementIndegree();
+				if(adj.getIndegree() == 0)
+					q.add(adj);
+			}
 		}
 		
 		if(counter != NUM_VERTICES)
