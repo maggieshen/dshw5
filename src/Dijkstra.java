@@ -108,6 +108,8 @@ public class Dijkstra {
    */
   public double computeEuclideanDistance
   					(double ux, double uy, double vx, double vy) {
+	  
+	  // Returns the Euclidean distance, sqrt((ux-vx)^2 + (uy-vy)^2).
         return Math.sqrt(Math.pow((ux - vx), 2) + Math.pow((uy - vy), 2));
   }
 
@@ -116,7 +118,15 @@ public class Dijkstra {
    * computeEuclideanCost method.
    */
   public void computeAllEuclideanDistances() {
-        
+	  
+	  // both vertices of an edge has reference to edge; therefore, we need
+	  // to update Euclidean distance twice per edge, once for each vertex
+	  for (Vertex v : getVertices())
+		  for (Edge e : v.adjacentEdges)
+		  {
+			  Vertex w = e.target;
+			  e.distance = computeEuclideanDistance(v.x, v.y, w.x, w.y);
+		  }
   }
 
   /**
@@ -126,7 +136,7 @@ public class Dijkstra {
    *          (String) starting city name
    */
   public void doDijkstra(String s) {
-        // TODO 
+	  
   }
 
   /**
