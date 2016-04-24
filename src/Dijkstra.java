@@ -136,7 +136,39 @@ public class Dijkstra {
    *          (String) starting city name
    */
   public void doDijkstra(String s) {
+	  BinaryHeap bh = new BinaryHeap();
+	  for(Vertex v : getVertices())
+	  {
+		  v.distance = Double.POSITIVE_INFINITY;
+		  v.known = false;
+		  bh.insert(v);
+	  }
 	  
+	  bh.decreaseKey(bh.find(getVertex(s)), getVertex(s).distance);
+	  
+	  while(!bh.isEmpty())
+	  {
+		  Vertex v = bh.deleteMin();
+		  if(v.known) continue;
+		  v.known = true;
+		  System.out.println(v.distance + "fuck");
+		  for(Edge e : v.adjacentEdges)
+		  {
+			  Vertex w = e.target;
+			  if(!w.known)
+			  {
+				  double cvw = e.distance;
+				  System.out.println((v.distance+cvw)+","+w.distance);
+				  if(v.distance + cvw < w.distance)
+				  {
+					  //Update w
+					  Double difference = w.distance - (v.distance + cvw);
+					  bh.decreaseKey(bh.find(w), difference);
+					  w.prev = v;
+				  }
+			  }
+		  }
+	  }
   }
 
   /**
@@ -151,9 +183,21 @@ public class Dijkstra {
    */
   public List<Edge> getDijkstraPath(String s, String t) {
     doDijkstra(s);
-
-    // TODO
-    return null; // Replace this
+    List<Edge> path = new LinkedList<>();
+    return getPath(getVertex(t), path);
+  }
+  
+  private List<Edge> getPath(Vertex w, List<Edge> path)
+  {
+	  System.out.println("hello");
+	  if(w.prev != null)
+	  {
+		  System.out.println("Fuck you");
+		  List<Edge> prevPath = getPath(w.prev, path);
+		  prevPath.add(new Edge(w.prev, w, w.prev.distance));
+		  return prevPath;
+	  }
+	  return new LinkedList<>();
   }
 
   // STUDENT CODE ENDS HERE
