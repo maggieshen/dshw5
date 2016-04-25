@@ -55,8 +55,9 @@ public class BinaryHeap
 		int i = 1;
 		for( Vertex item : items )
 		{
+			array[ i ] = item;
 			hm.put(item, i);
-			array[ i++ ] = item;
+			i++;
 		}
 		buildHeap( );
 	}
@@ -160,7 +161,7 @@ public class BinaryHeap
 	public void decreaseKey(int p, double d)
 	{
 		Vertex x = array[p];
-		x.distance -= d;
+		x.distance = d;
 		
 		if( currentSize == array.length - 1 )
 			enlargeArray( array.length * 2 + 1 );

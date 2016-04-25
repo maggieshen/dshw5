@@ -145,7 +145,8 @@ public class Dijkstra {
 			bh.insert(v);
 		}
 
-		bh.decreaseKey(bh.find(getVertex(s)), getVertex(s).distance);
+		bh.decreaseKey(bh.find(getVertex(s)), 0);
+		System.out.print("THERE IS A GOD " + getVertex(s).distance);
 
 		while(!bh.isEmpty())
 		{
@@ -156,15 +157,16 @@ public class Dijkstra {
 
 			for(Edge e : v.adjacentEdges)
 			{
+				System.out.println(e);
 				Vertex w = e.target;
 				if(!w.known)
 				{
 					double cvw = e.distance;
+					System.out.println(v.distance + " " + cvw + " " + w.distance);
 					if(v.distance + cvw < w.distance)
 					{
 						//Update w
-						Double difference = w.distance - (v.distance + cvw);
-						bh.decreaseKey(bh.find(w), difference);
+						bh.decreaseKey(bh.find(w), v.distance + cvw);
 						w.prev = v;
 					}
 				}
@@ -193,10 +195,20 @@ public class Dijkstra {
 		if(w.prev != null)
 		{
 			List<Edge> prevPath = getPath(w.prev, path);
-			prevPath.add(new Edge(w.prev, w, w.prev.distance));
+			prevPath.add(findEdge(w.prev, w));
 			return prevPath;
 		}
 		return new LinkedList<>();
+	}
+	
+	private Edge findEdge(Vertex v, Vertex w)
+	{
+		for(Edge e : v.adjacentEdges)
+		{
+			if(e.target == w)
+				return e;
+		}
+		return null;
 	}
 
 	// STUDENT CODE ENDS HERE
