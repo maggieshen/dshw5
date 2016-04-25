@@ -161,6 +161,10 @@ public class BinaryHeap
 	{
 		Vertex x = array[p];
 		x.distance -= d;
+		
+		if( currentSize == array.length - 1 )
+			enlargeArray( array.length * 2 + 1 );
+		
 		int hole = ++currentSize;
 		for( array[ 0 ] = x; ((Double)(x.distance)).compareTo
 				( array[ hole / 2 ].distance ) < 0; hole /= 2 )
